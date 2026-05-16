@@ -3,7 +3,7 @@
 ## Functionality
 - This is software for managing areas. Areas have a name, description, image, and tags.
 - User can create an account and use it to log in to the software.
-- User can add add areas and edit areas and delete them.
+- User can add areas and edit areas and delete them.
 - User can see areas added to the software.
 - User can search areas by keyword and/or tags.
 - User page shows how many areas the user has added, and a list of the areas.
