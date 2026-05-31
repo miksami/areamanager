@@ -1,9 +1,11 @@
 from flask import Flask
-from flask import redirect, render_template, request, session
-import random
+from flask import redirect, render_template, request, session, abort, make_response
 import sqlite3
 import db
 import config
+import helper
+import areas
+import users
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -55,14 +57,132 @@ def logout():
     del session["uid"], session["username"]
     return redirect("/")
 
+@app.route("/user/<int:uid>")
+def user(uid):
+    user = users.get_user(uid)
+    if not user:
+        abort(404)
+    sql = "SELECT a.id id, a.name name, u.username author FROM areas a, users u WHERE a.uid = u.id AND u.id = ?"
+    areas = db.query(sql, [uid])
+    return render_template("user.html", user=user, area_count=len(areas), areas=areas)
+
 @app.route("/new_area")
 def new_area():
     return render_template("new_area.html")
 
 @app.route("/create_area", methods=["POST"])
 def create_area():
-    pass
+    helper.require_login()
+    name = request.form["name"]
+    description = request.form["description"]
+    image = request.files["image"]
+    if not name or not description or not image:
+        return "Form is missing fields.", 400
+    
+    if image.mimetype != "image/jpeg":
+        return "File is not a JPEG image.", 400
+    file = image.read()
+    if len(file) > 1024 * 1024:
+        return "File is over 1 MB.", 400
 
-@app.route("/area/<int:page_id>")
-def page(page_id):
-    return "Area " + str(page_id)
+    sql = "INSERT INTO areas (uid, name, description, image) VALUES (?, ?, ?, ?)"
+    db.execute(sql, [session["uid"], name, description, file])
+    return redirect("/area/"+str(db.last_insert_id()))
+
+@app.route("/areas")
+def list_areas():
+    keyword = request.args.get("keyword") or ""
+    restrict = request.args.get("restrict") or ""
+    query = None
+    if keyword:
+        word = "%"+keyword+"%"
+        if restrict == "name":
+            sql = "SELECT a.id id, a.uid uid, a.name name, u.username author FROM areas a, users u WHERE a.uid = u.id AND (a.name LIKE ?)"
+            query = db.query(sql, [word])
+        elif restrict == "description":
+            sql = "SELECT a.id id, a.uid uid, a.name name, u.username author FROM areas a, users u WHERE a.uid = u.id AND (a.description LIKE ?)"
+            query = db.query(sql, [word])
+        elif restrict == "author":
+            sql = "SELECT a.id id, a.uid uid, a.name name, u.username author FROM areas a, users u WHERE a.uid = u.id AND (u.username LIKE ?)"
+            query = db.query(sql, [word])
+        else:
+            sql = "SELECT a.id id, a.uid uid, a.name name, u.username author FROM areas a, users u WHERE a.uid = u.id AND (a.name LIKE ? OR a.description LIKE ?)"
+            query = db.query(sql, [word, word])
+    else:
+        sql = "SELECT a.id id, a.uid uid, a.name name, u.username author FROM areas a, users u WHERE a.uid = u.id"
+        query = db.query(sql)
+    return render_template("areas.html", areas=query, keyword=keyword, restrict=restrict)
+
+@app.route("/area/<int:aid>")
+def area(aid):
+    query = areas.get_area(aid)
+    if not query:
+        abort(404)
+    return render_template("area.html", id=aid, area=query)
+
+@app.route("/area/<int:aid>/edit", methods=["GET", "POST"])
+def area_edit(aid):
+    if request.method == "GET":
+        query = areas.get_area(aid)
+        if not query:
+            abort(404)
+        return render_template("edit_area.html", id=aid, area=query)
+    elif request.method == "POST":
+        sql = "SELECT uid FROM areas WHERE id = ?"
+        query = db.query(sql, [aid])
+        if not query:
+            abort(404)
+        helper.author_check(query[0])
+
+        name = request.form["name"]
+        description = request.form["description"]
+        image = request.files["image"]
+        if not name or not description:
+            return "Form is missing fields.", 400
+
+        if image:
+            if image.mimetype != "image/jpeg":
+                return "File is not a JPEG image."
+            file = image.read()
+            if len(file) > 1024 * 1024:
+                return "File is over 1 MB.", 400
+
+            sql = "UPDATE areas SET (name, description, image) = (?, ?, ?) WHERE id = ?"
+            db.execute(sql, [name, description, file, aid])
+        else:
+            sql = "UPDATE areas SET (name, description) = (?, ?) WHERE id = ?"
+            db.execute(sql, [name, description, aid])
+        return redirect("/area/"+str(aid))
+
+@app.route("/area/<int:aid>/delete", methods=["GET", "POST"])
+def area_delete(aid):
+    if request.method == "GET":
+        sql = "SELECT uid, name FROM areas WHERE id = ?"
+        query = db.query(sql, [aid])
+        if not query:
+            abort(404)
+        return render_template("delete_area.html", id=aid, area=query[0])
+    elif request.method == "POST":
+        if "confirm" in request.form:
+            sql = "SELECT uid FROM areas WHERE id = ?"
+            query = db.query(sql, [aid])
+            if not query:
+                abort(404)
+            helper.author_check(query[0])
+            sql = "DELETE FROM areas WHERE id = ?"
+            db.execute(sql, [aid])
+            return redirect("/")
+        else:
+            return redirect("/area/"+str(aid))
+        
+
+@app.route("/area/<int:aid>/image")
+def area_image(aid):
+    sql = "SELECT image FROM areas WHERE id = ?"
+    query = db.query(sql, [aid])
+    if not query:
+        abort(404)
+
+    response = make_response(bytes(query[0][0]))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response

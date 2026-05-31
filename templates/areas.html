@@ -1,0 +1,32 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Area Manager</title>
+</head>
+
+<body>
+  <h1>
+    Areas
+  </h1>
+  <form action="/areas" method="get">
+    <p>
+      Search:
+      <input type="text" name="keyword" placeholder="Keyword" value="{{ keyword }}" />
+      <label><input type="radio" name="restrict" value="" {% if restrict == "" %} checked {% endif %} /> Name and description</label>
+      <label><input type="radio" name="restrict" value="name" {% if restrict == "name" %} checked {% endif %} /> Name only</label>
+      <label><input type="radio" name="restrict" value="description" {% if restrict == "description" %} checked {% endif %} /> Description only</label>
+      <label><input type="radio" name="restrict" value="author" {% if restrict == "author" %} checked {% endif %} /> Author name</label>
+      <input type="submit" value="Search" />
+    </p>
+  </form>
+  {% for area in areas %}
+    <li><a href="/area/{{ area.id }}">{{ area.name }}</a> by <a href="/user/{{ area.uid }}">{{ area.author }}</a></li>
+  {% endfor %}
+  <p>
+    <a href="/">Go home</a>
+  </p>
+</body>
+
+</html>

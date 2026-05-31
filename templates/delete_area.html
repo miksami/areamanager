@@ -1,0 +1,35 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Area Manager - {{ area.name }}</title>
+</head>
+
+<body>
+  {% if session.uid == area.uid %}
+  <h1>
+    Delete {{ area.name }}?
+  </h1>
+  <p>
+    This action is irreversible.
+  </p>
+  <form action="/area/{{ id }}/delete" method="post">
+    <input type="submit" name="confirm" value="Confirm" />
+    <input type="submit" name="cancel" value="Cancel" />
+  </form>
+  {% elif session.uid %}
+    <p>
+      You are logged in, but you didn't add this area.
+    </p>
+  {% else %}
+    <p>
+      You are not logged in.
+    </p>
+  {% endif %}
+  <p>
+    <a href="/">Go home</a>
+  </p>
+</body>
+
+</html>

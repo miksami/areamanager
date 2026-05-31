@@ -1,0 +1,41 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Area Manager - {{ area.name }}</title>
+</head>
+
+<body>
+  <h1>
+    {{ area.name }}
+  </h1>
+  <h2>
+    By <a href="/user/{{ area.uid }}">{{ area.author }}</a>
+  </h2>
+  <img src="/area/{{ id }}/image" />
+  <p>
+    {{ area.description }}
+  </p>
+  {% if session.uid == area.uid %}
+    <p>
+      <a href="/area/{{ id }}/edit">Edit area</a>
+    </p>
+    <p>
+      <a href="/area/{{ id }}/delete">Delete area</a>
+    </p>
+  {% elif session.uid %}
+    <p>
+      You are logged in, but you didn't add this area.
+    </p>
+  {% else %}
+    <p>
+      You are not logged in.
+    </p>
+  {% endif %}
+  <p>
+    <a href="/">Go home</a>
+  </p>
+</body>
+
+</html>

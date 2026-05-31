@@ -1,0 +1,28 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Area Manager - {{ user.username }}</title>
+</head>
+
+<body>
+  <h1>
+    {{ user.username }}
+  </h1>
+  <h2>Stats</h2>
+  <ul>
+    <li>Areas: {{ area_count }}</li>
+  </ul>
+  <h2>Areas</h2>
+  <ul>
+  {% for area in areas %}
+  <li><a href="/area/{{ area.id }}">{{ area.name }}</a></li>
+  {% endfor %}
+  </ul>
+  <p>
+    <a href="/">Go home</a>
+  </p>
+</body>
+
+</html>

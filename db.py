@@ -15,7 +15,7 @@ def execute(sql, params=[]):
         g.last_insert_id = result.lastrowid
         con.close()
     except Exception as e:
-        con.close()
+        con.close() # if an exception occurs while modifying tables, they will stay locked. we catch this exception, close the connection, and re-raise the exception
         raise e
 
 def last_insert_id():
