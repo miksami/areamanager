@@ -1,0 +1,31 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Area Manager</title>
+</head>
+
+<body>
+  {% if session.uid %}
+  <p>
+    You are logged in as {{ session.username }}
+  </p>
+  
+  <p>
+    <a href="/new_area">New area</a>
+  </p>
+  <p>
+    <a href="/logout">Logout</a>
+  </p>
+  {% else %}
+  <p>
+    <a href="/register">Register</a>
+  </p>
+  <p>
+    <a href="/login">Login</a>
+  </p>
+  {% endif %}
+</body>
+
+</html>

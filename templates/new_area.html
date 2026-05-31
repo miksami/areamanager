@@ -1,0 +1,40 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Area Manager - New Area</title>
+</head>
+
+<body>
+  {% if session.uid %}
+  <form action="/create_area" method="post">
+    <p>
+      Name: <br />
+      <input type="text" name="name" />
+    </p>
+    <p>
+      Description: <br />
+      <textarea name="description"></textarea>
+    </p>
+    <p>
+      Image: <br />
+      <input type="file" name="image" />
+    </p>
+    <!--<p>
+      Tags: <br />
+      <input type="password" name="description" />
+    </p>-->
+    <input type="submit" value="Submit" />
+  </form>
+  {% else %}
+  <p>
+    You are not logged in!
+  </p>
+  <p>
+    <a href="/">Go home</a>
+  </p>
+  {% endif %}
+</body>
+
+</html>
