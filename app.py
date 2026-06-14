@@ -273,6 +273,8 @@ def area_delete(aid):
                 abort(404)
             helper.author_check(query[0])
             helper.check_csrf()
+            sql = "DELETE FROM area_tags WHERE aid = ?"
+            db.execute(sql, [aid])
             sql = "DELETE FROM items WHERE aid = ?"
             db.execute(sql, [aid])
             sql = "DELETE FROM areas WHERE id = ?"
