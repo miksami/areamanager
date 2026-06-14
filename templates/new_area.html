@@ -21,6 +21,13 @@
       Image (1 MB max, JPEG only): <br />
       <input type="file" name="image" required />
     </p>
+    <p>
+      Vibe:
+      {% for tag in all_tags %}
+      <label><input type="checkbox" name="tag" value="{{ tag.value }}"> {{ tag.value }}</label>
+      {% endfor %}
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Submit" />
   </form>
   {% else %}

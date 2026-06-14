@@ -17,7 +17,14 @@
       <label><input type="radio" name="restrict" value="" {% if restrict == "" %} checked {% endif %} /> Name and description</label>
       <label><input type="radio" name="restrict" value="name" {% if restrict == "name" %} checked {% endif %} /> Name only</label>
       <label><input type="radio" name="restrict" value="description" {% if restrict == "description" %} checked {% endif %} /> Description only</label>
-      <label><input type="radio" name="restrict" value="author" {% if restrict == "author" %} checked {% endif %} /> Author name</label>
+      <label><input type="radio" name="restrict" value="author" {% if restrict == "author" %} checked {% endif %} /> Author name</label>    
+      <p>
+        Filter by vibe:
+        <label><input type="radio" name="tag" value="" {% if "" == filter_tag %} checked {% endif %}> (no filter)</label>
+        {% for tag in all_tags %}
+        <label><input type="radio" name="tag" value="{{ tag.value }}" {% if tag.value == filter_tag %} checked {% endif %}> {{ tag.value }}</label>
+        {% endfor %}
+      </p>
       <input type="submit" value="Search" />
     </p>
   </form>

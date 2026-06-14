@@ -1,0 +1,38 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Area Manager - Editing {{ item.name }}</title>
+</head>
+
+<body>
+  {% if session.uid == item.uid %}
+  <form action="/item/{{ id }}/edit" method="post" enctype="multipart/form-data">
+    <h1>Editing {{ item.name }}</h1>
+    <p>
+      Name: <br />
+      <input type="text" name="name" value="{{ item.name }}" required />
+    </p>
+    <p>
+      Image (1 MB max, JPEG only): <br />
+      <input type="file" name="image" /> <br />
+      (Previous image will be kept, unless a new image is selected.)
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" value="Submit" />
+  </form>
+  {% else %}
+  <p>
+    You are not the creator of this area!
+  </p>
+  <p>
+    <a href="/">Go home</a>
+  </p>
+  {% endif %}
+  <p>
+    <a href="/area/{{ item.aid }}">Go back to the area</a>
+  </p>
+</body>
+
+</html>

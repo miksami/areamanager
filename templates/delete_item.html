@@ -3,25 +3,25 @@
 <html>
 
 <head>
-  <title>Area Manager - {{ area.name }}</title>
+  <title>Area Manager - {{ item.name }}</title>
 </head>
 
 <body>
-  {% if session.uid == area.uid %}
+  {% if session.uid == item.uid %}
   <h1>
-    Delete {{ area.name }}?
+    Delete {{ item.name }}?
   </h1>
   <p>
     This action is irreversible.
   </p>
-  <form action="/area/{{ id }}/delete" method="post">
+  <form action="/item/{{ id }}/delete" method="post">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" name="confirm" value="Confirm" />
     <input type="submit" name="cancel" value="Cancel" />
   </form>
   {% elif session.uid %}
     <p>
-      You are logged in, but you didn't add this area.
+      You are logged in, but you didn't add this item.
     </p>
   {% else %}
     <p>

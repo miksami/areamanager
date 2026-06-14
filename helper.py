@@ -1,4 +1,8 @@
-from flask import session, abort
+from flask import request, session, abort
+
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
 
 def require_login():
     if "uid" not in session:

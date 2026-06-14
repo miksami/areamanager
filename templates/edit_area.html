@@ -23,6 +23,13 @@
       <input type="file" name="image" /> <br />
       (Previous image will be kept, unless a new image is selected.)
     </p>
+    <p>
+      Vibe:
+      {% for tag in all_tags %}
+      <label><input type="checkbox" name="tag" value="{{ tag.value }}" {% if tag.value in tags %} checked {% endif %}> {{ tag.value }}</label>
+      {% endfor %}
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Submit" />
   </form>
   {% else %}

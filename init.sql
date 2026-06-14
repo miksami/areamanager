@@ -1,0 +1,1 @@
+insert into tags (value) values ('normal'), ('silly'), ('cool'), ('weird'), ('dangerous'), ('curious'), ('mysterious'), ('undescribable');

@@ -33,6 +33,31 @@
       You are not logged in.
     </p>
   {% endif %}
+  <h2>Items</h2>
+  {% for item in items %}
+    <li>
+      <img src="/item/{{ item.id }}/image" title="{{ item.name }}" /> by <a href="/user/{{ item.uid }}">{{ item.author }}</a>
+      {% if session.uid == area.uid %}
+          <a href="/item/{{ id }}/edit">Edit</a> <a href="/item/{{ id }}/delete">Delete</a>
+      {% endif %}
+    </li>
+  {% endfor %}
+  {% if session.uid %}
+  <form action="/create_item" method="post" enctype="multipart/form-data">
+    <h3>Add new item:</h2>
+    <p>
+      Name: <br />
+      <input type="text" name="name" required />
+    </p>
+    <p>
+      Image (1 MB max, JPEG only): <br />
+      <input type="file" name="image" required />
+    </p>
+    <input type="hidden" name="aid" value="{{ id }}" />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" value="Submit" />
+  </form>
+  {% endif %}
   <p>
     <a href="/">Go home</a>
   </p>

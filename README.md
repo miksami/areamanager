@@ -21,6 +21,7 @@ $ pip install flask
 2. Create database:  
 ```
 $ sqlite3 database.db < schema.sql
+$ sqlite3 database.db < init.sql
 ```
 3. Run:  
 ```
@@ -33,5 +34,7 @@ As of the current commit:
 
 - User can create an account, and log in
 - User can create, edit, and delete areas
-- Area listing lists all areas, and allows searching by a keyword (with the ability to only search name, description, and author name)
+- Area listing lists all areas, and allows searching by a keyword (with the ability to only search name, description, and author name), and to filter by a vibe
 - Userpage shows how many areas the user has added, and a list of the areas.
+- User can add items to areas, and edit and delete them.
+- Areas can be tagged with multiple vibes
