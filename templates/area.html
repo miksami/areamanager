@@ -37,7 +37,7 @@
   {% for item in items %}
     <li>
       <img src="/item/{{ item.id }}/image" title="{{ item.name }}" /> by <a href="/user/{{ item.uid }}">{{ item.author }}</a>
-      {% if session.uid == area.uid %}
+      {% if session.uid == item.uid %}
           <a href="/item/{{ item.id }}/edit">Edit</a> <a href="/item/{{ item.id }}/delete">Delete</a>
       {% endif %}
     </li>

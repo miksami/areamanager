@@ -238,7 +238,6 @@ def item_edit(iid):
         query2 = areas.get_area(aid)
         if not query2:
             abort(404)
-        print(query2[0])
         helper.author_check(query[0])
         helper.check_csrf()
 
@@ -255,10 +254,10 @@ def item_edit(iid):
                 return "File is over 1 MB.", 400
 
             sql = "UPDATE items SET (name, image) = (?, ?) WHERE id = ?"
-            db.execute(sql, [name, file, aid])
+            db.execute(sql, [name, file, iid])
         else:
             sql = "UPDATE items SET (name) = (?) WHERE id = ?"
-            db.execute(sql, [name, aid])
+            db.execute(sql, [name, iid])
         return redirect("/area/"+str(aid))
 
 @app.route("/area/<int:aid>/delete", methods=["GET", "POST"])
