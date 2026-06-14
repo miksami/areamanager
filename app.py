@@ -22,9 +22,13 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
     elif request.method == "POST":
-        username = request.form["username"]
-        password1 = request.form["password1"]
-        password2 = request.form["password2"]
+        username = request.form.get("username")
+        password1 = request.form.get("password1")
+        password2 = request.form.get("password2")
+        if not username or len(username) > 16:
+            return "Username can't be empty or over 16 characters."
+        if not password1:
+            return "Password can't be empty."
         if password1 != password2:
             return "Your passwords do not match.", 400
         passhash = generate_password_hash(password1)
@@ -42,8 +46,8 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
     elif request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+        username = request.form.get("username")
+        password = request.form.get("password")
 
         sql = "SELECT id, passhash FROM users WHERE username = ?"
         query = db.query(sql, [username])
@@ -81,8 +85,8 @@ def new_area():
 def create_area():
     helper.require_login()
     helper.check_csrf()
-    name = request.form["name"]
-    description = request.form["description"]
+    name = request.form.get("name")
+    description = request.form.get("description")
     image = request.files["image"]
     set_tags = request.form.getlist("tag")
     if not name or not description or not image:
@@ -109,8 +113,8 @@ def create_area():
 def create_item():
     helper.require_login()
     helper.check_csrf()
-    name = request.form["name"]
-    aid = request.form["aid"]
+    name = request.form.get("name")
+    aid = request.form.get("aid")
     image = request.files["image"]
     if not name or not aid or not image:
         return "Form is missing fields.", 400
@@ -187,8 +191,8 @@ def area_edit(aid):
         helper.author_check(query[0])
         helper.check_csrf()
 
-        name = request.form["name"]
-        description = request.form["description"]
+        name = request.form.get("name")
+        description = request.form.get("description")
         image = request.files["image"]
         set_tags = request.form.getlist("tag")
         if not name or not description:
@@ -238,7 +242,7 @@ def item_edit(iid):
         helper.author_check(query[0])
         helper.check_csrf()
 
-        name = request.form["name"]
+        name = request.form.get("name")
         image = request.files["image"]
         if not name:
             return "Form is missing fields.", 400
