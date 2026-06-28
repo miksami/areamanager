@@ -3,6 +3,7 @@
 <html>
 
 <head>
+  <link rel="stylesheet" href="/static/main.css">
   <title>Area Manager - Editing {{ item.name }}</title>
 </head>
 
@@ -16,7 +17,7 @@
     </p>
     <p>
       Image (1 MB max, JPEG only): <br />
-      <input type="file" name="image" /> <br />
+      <input type="file" name="image" accept=".jpg, .jpeg, .jpe" /> <br />
       (Previous image will be kept, unless a new image is selected.)
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

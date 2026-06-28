@@ -137,7 +137,6 @@ def list_areas():
     keyword = request.args.get("keyword") or ""
     restrict = request.args.get("restrict") or ""
     tag = request.args.get("tag") or ""
-    print(tag)
     query = None
     if keyword:
         word = "%"+keyword+"%"

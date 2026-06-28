@@ -1,0 +1,30 @@
+body {
+    margin: 0 auto;
+    max-width: 70em;
+}
+
+img {
+    max-height: 50vh;
+}
+
+figure {
+    margin: 0;
+    display: inline-block;
+    width: 16em;
+    border: black solid 1px;
+}
+figure figcaption {
+    font-size: 80%;
+    text-align: center;
+}
+figure img {
+    display: block;
+    margin: 0.5em auto;
+    width: 15em;
+    height: 15em;
+    object-fit: contain;
+}
+
+.formatted {
+    white-space: pre-line;
+}

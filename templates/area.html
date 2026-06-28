@@ -3,6 +3,7 @@
 <html>
 
 <head>
+  <link rel="stylesheet" href="/static/main.css">
   <title>Area Manager - {{ area.name }}</title>
 </head>
 
@@ -14,9 +15,7 @@
     By <a href="/user/{{ area.uid }}">{{ area.author }}</a>
   </h2>
   <img src="/area/{{ id }}/image" />
-  <p>
-    {{ area.description }}
-  </p>
+  <p class="formatted">{{ area.description }}</p>
   {% if session.uid == area.uid %}
     <p>
       <a href="/area/{{ id }}/edit">Edit area</a>
@@ -35,12 +34,14 @@
   {% endif %}
   <h2>Items</h2>
   {% for item in items %}
-    <li>
-      <img src="/item/{{ item.id }}/image" title="{{ item.name }}" /> by <a href="/user/{{ item.uid }}">{{ item.author }}</a>
-      {% if session.uid == item.uid %}
+    <figure>
+      <figcaption>
+        {{ item.name }} by <a href="/user/{{ item.uid }}">{{ item.author }}</a> {% if session.uid == item.uid %}
           <a href="/item/{{ item.id }}/edit">Edit</a> <a href="/item/{{ item.id }}/delete">Delete</a>
-      {% endif %}
-    </li>
+        {% endif %}
+      </figcaption>
+      <img src="/item/{{ item.id }}/image" title="{{ item.name }}" />
+    </figure>
   {% endfor %}
   {% if session.uid %}
   <form action="/create_item" method="post" enctype="multipart/form-data">
@@ -51,7 +52,7 @@
     </p>
     <p>
       Image (1 MB max, JPEG only): <br />
-      <input type="file" name="image" required />
+      <input type="file" name="image" accept=".jpg, .jpeg, .jpe" required />
     </p>
     <input type="hidden" name="aid" value="{{ id }}" />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
